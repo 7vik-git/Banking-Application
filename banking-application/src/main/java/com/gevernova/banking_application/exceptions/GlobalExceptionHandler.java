@@ -20,6 +20,28 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(InsufficientBalanceException.class)
     public ResponseEntity<ResponseDTO> handleInsufficientBalance(InsufficientBalanceException exception){
         log.warn(exception.getMessage());
+        return new ResponseEntity<>(new ResponseDTO(exception.getMessage()),HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(UserNameNotAvailableException.class)
+    public ResponseEntity<ResponseDTO> handleUsernameNotAvailable(UserNameNotAvailableException exception){
+        log.warn(exception.getMessage());
         return new ResponseEntity<>(new ResponseDTO(exception.getMessage()),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmailIdAlreadyExistsException.class)
+    public ResponseEntity<String> handleEmailIDAlreadyExists(EmailIdAlreadyExistsException exception){
+        log.warn(exception.getMessage());
+        return ResponseEntity.badRequest().body("An account with this email already exists");
+    }
+
+    @ExceptionHandler(OtpNotFoundException.class)
+    public ResponseEntity<String> handleOtpNotFound(OtpNotFoundException exception){
+        return ResponseEntity.badRequest().body("OTP not requested or Invalid OTP");
+    }
+
+    @ExceptionHandler(OtpExpiredException.class)
+    public  ResponseEntity<String> handleOtpExpired(OtpNotFoundException exception){
+        return ResponseEntity.badRequest().body("OTP expired, reuest a new OTP");
     }
 }
