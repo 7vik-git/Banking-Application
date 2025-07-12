@@ -1,9 +1,7 @@
 package com.gevernova.banking_application.controller;
 
-import com.gevernova.banking_application.dto.RegisterUserApiResponse;
-import com.gevernova.banking_application.dto.UserRequestDTO;
-import com.gevernova.banking_application.dto.UserResponseDTO;
-import com.gevernova.banking_application.dto.VerifyUserDTO;
+import com.gevernova.banking_application.dto.*;
+import com.gevernova.banking_application.service.LoginService;
 import com.gevernova.banking_application.service.UserService;
 import com.gevernova.banking_application.service.impl.UserServiceImpl;
 import jakarta.validation.Valid;
@@ -20,25 +18,33 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/user")
 public class UserController {
-    private final UserServiceImpl userService;
+
+    private final UserService userService;
+    private final LoginService loginService;
 
     @PostMapping("/register")
-    public ResponseEntity<RegisterUserApiResponse<UserResponseDTO>> registerUser(@Valid @RequestBody UserRequestDTO dto){
+    public ResponseEntity<String> registerUser(@Valid @RequestBody UserRequestDTO dto){
         UserResponseDTO rdto = userService.registerUser(dto);
         //using this to indicate user to complete verification
         //created sep dto class, so that both custom message asking to verify and rdto can be sent as response
         RegisterUserApiResponse<UserResponseDTO> response =
                 new RegisterUserApiResponse<>
                         ("Account Created Successfully. Verify with OTP to activate your account", rdto);
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok("Registration Successful, Verify with the OTP sent to your mail");
     }
 
     @PostMapping("/verify")
-    public ResponseEntity<String> verifyUser(@RequestBody VerifyUserDTO dto){
+    public ResponseEntity<String> verifyUser(@Valid @RequestBody VerifyUserDTO dto){
         boolean response = userService.verifyUser(dto);
         if(response){
             return ResponseEntity.ok("OTP verification successful");
         }
         return ResponseEntity.badRequest().body("OTP & Email mismatch");
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<UserLoginResponseDTO> userLogin(@RequestBody UserLoginRequestDTO dto){
+        UserLoginResponseDTO response = loginService.userLogin(dto);
+        return ResponseEntity.ok(response);
     }
 }

@@ -41,7 +41,17 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(OtpExpiredException.class)
-    public  ResponseEntity<String> handleOtpExpired(OtpNotFoundException exception){
-        return ResponseEntity.badRequest().body("OTP expired, reuest a new OTP");
+    public  ResponseEntity<String> handleOtpExpired(OtpExpiredException exception){
+        return ResponseEntity.badRequest().body("OTP expired, request a new OTP");
+    }
+
+    @ExceptionHandler(WrongPasswordException.class)
+    public ResponseEntity<String> handleWrongPassword(WrongPasswordException exception){
+        return ResponseEntity.badRequest().body(exception.getMessage());
+    }
+
+    @ExceptionHandler(UserNotVerifiedException.class)
+    public ResponseEntity<String> handleUserNotVerified(UserNotVerifiedException exception){
+        return ResponseEntity.internalServerError().body(exception.getMessage());
     }
 }

@@ -1,14 +1,13 @@
 package com.gevernova.banking_application.service.impl;
 
+import com.gevernova.banking_application.dto.UserLoginRequestDTO;
 import com.gevernova.banking_application.dto.UserRequestDTO;
 import com.gevernova.banking_application.dto.UserResponseDTO;
 import com.gevernova.banking_application.dto.VerifyUserDTO;
 import com.gevernova.banking_application.entity.OtpDetails;
 import com.gevernova.banking_application.entity.User;
 import com.gevernova.banking_application.entity.enums.Purpose;
-import com.gevernova.banking_application.exceptions.AccountNotFoundException;
-import com.gevernova.banking_application.exceptions.EmailIdAlreadyExistsException;
-import com.gevernova.banking_application.exceptions.UserNameNotAvailableException;
+import com.gevernova.banking_application.exceptions.*;
 import com.gevernova.banking_application.mapper.UserMapper;
 import com.gevernova.banking_application.repository.EmailVerificationRepository;
 import com.gevernova.banking_application.repository.UserRepository;
@@ -47,6 +46,7 @@ public class UserServiceImpl implements UserService {
         log.info("email verification code sent to the user");
         return UserMapper.userToResponseDTO(user);
     }
+
 
     public boolean verifyUser(VerifyUserDTO dto){
         boolean response = otpService.validateOtp(dto.getEmail(), dto.getOtp());

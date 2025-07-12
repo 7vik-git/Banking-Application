@@ -1,5 +1,4 @@
 package com.gevernova.banking_application.dto;
-import com.gevernova.banking_application.entity.enums.Role;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
@@ -16,7 +15,6 @@ public class UserRequestDTO {
     private String username;
     @Pattern(regexp = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@#$%^&+=!])(?!.*\\s).{8,}$")
     private String password;
-    private Role role;
     @Email(message = "Enter Valid Email address")
     private String email;
 }

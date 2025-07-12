@@ -9,7 +9,6 @@ public class UserMapper {
         return User.builder()
                 .username(dto.getUsername())
                 .password(dto.getPassword())
-                .role(dto.getRole())
                 .email(dto.getEmail())
                 .build();
     }
@@ -18,7 +17,6 @@ public class UserMapper {
         return UserRequestDTO.builder()
                 .username(user.getUsername())
                 .password(user.getPassword())
-                .role(user.getRole())
                 .email(user.getEmail())
                 .build();
     }
@@ -27,7 +25,6 @@ public class UserMapper {
         return UserResponseDTO.builder()
                 .username(user.getUsername())
                 .id(user.getId())
-                .role(user.getRole())
                 .email(user.getEmail())
                 .build();
     }

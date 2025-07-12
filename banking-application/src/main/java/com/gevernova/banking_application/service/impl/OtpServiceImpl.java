@@ -28,11 +28,17 @@ public class OtpServiceImpl implements OtpService {
 
     public void generateOTP(String email, Purpose purpose){
         String otp = String.format("%06d", new Random().nextInt(999999));
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AccountNotFoundException("User not found with email: " + email));
+
         OtpDetails token = new OtpDetails();
         token.setEmail(email);
         token.setExpiryTime(LocalDateTime.now().plusMinutes(5));
+        token.setOtp(otp);
         token.setPurpose(purpose);
+        token.setUser(user);
         sendOtpToEmail(email,otp);
+        otpDetailsRepository.save(token);
         log.info("OTP Generated successfully");
     }
 
@@ -51,10 +57,13 @@ public class OtpServiceImpl implements OtpService {
                 .orElseThrow(()->new AccountNotFoundException("Enter correct Email"));
         OtpDetails otpD = otpDetailsRepository.findByUserIdAndOtp(user.getId(), otp)
                 .orElseThrow(()->new OtpNotFoundException("OTP not requested or incorrect"));
-        if(otpD.getExpiryTime().isAfter(LocalDateTime.now())){
+        if(otpD.getExpiryTime().isBefore(LocalDateTime.now())){
             throw new OtpExpiredException("OTP Expired, request for a new OTP");
         }
         log.info("OTP validation successful");
+        user.setVerified(true);
+        userRepository.save(user);
+        log.info("User is now verified");
         return true;
     }
 

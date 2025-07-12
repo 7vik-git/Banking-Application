@@ -1,6 +1,5 @@
 package com.gevernova.banking_application.entity;
 
-import com.gevernova.banking_application.entity.enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -18,8 +17,6 @@ public class User {
     private String username;
     @Column(nullable = false)
     private String password;
-    @Enumerated(EnumType.STRING)
-    private Role role;
     @Column(name = "email")
     private String email;
     private boolean isVerified = false;
